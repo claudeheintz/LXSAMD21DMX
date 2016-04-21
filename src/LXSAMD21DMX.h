@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    
    This is the circuit for a simple unisolated DMX Shield
    that could be used with LXSAMD21DMX.  It uses a line driver IC
-   to convert the output from the Teensy to DMX:
+   to convert the output from the SAM D-21 to DMX:
 
  MKR1000 Pin
  |                         SN 75176 A or MAX 481CPA
@@ -68,16 +68,15 @@ typedef void (*LXRecvCallback)(int);
 /*!   
 @class LXSAMD21DMX
 @abstract
-   LXTeensyDMX is a driver for sending or receiving DMX using a Teensy 3.1/3.2's
-   UART0 RX pin 0, TX pin 1
+   LXSAMD21DMX is a driver for sending or receiving DMX using one of a SAM D-21's five serial peripheral interfaces (SERCOMs).
    
-   LXTeensyDMX output mode continuously sends DMX once its interrupts have been enabled using startOutput().
+   LXSAMD21DMX output mode continuously sends DMX once its interrupts have been enabled using startOutput().
    Use setSlot() to set the level value for a particular DMX dimmer/address/channel.
    
-   LXTeensyDMX input mode continuously receives DMX once its interrupts have been enabled using startInput()
+   LXSAMD21DMX input mode continuously receives DMX once its interrupts have been enabled using startInput()
    Use getSlot() to read the level value for a particular DMX dimmer/address/channel.
    
-   LXTeensyDMX is used with a single instance called Teensy3DMX	.
+   LXSAMD21DMX is used with a single instance called SAMD21DMX	.
 */
 
 class LXSAMD21DMX  {
