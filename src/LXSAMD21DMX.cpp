@@ -82,9 +82,7 @@ LXSAMD21DMX::LXSAMD21DMX ( void ) {
 	_interrupt_status = ISR_DISABLED;
 	
 	//zero buffer including _dmxData[0] which is start code
-    for (int n=0; n<DMX_MAX_SLOTS+1; n++) {
-    	_dmxData[n] = 0;
-    }
+    memset(_dmxData, 0, DMX_MAX_SLOTS+1);
 }
     
     
