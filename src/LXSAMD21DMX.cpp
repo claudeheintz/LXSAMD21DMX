@@ -52,7 +52,7 @@ void SERCOM4_Handler()
 
 // **************************** global data (can be accessed in ISR)  ***************
 
-Uart SerialDMX (&DMX_sercom, PIN_DMX_RX, PIN_DMX_TX, SERCOM_RX_PAD_3, UART_TX_PAD_2);
+Uart SerialDMX (&DMX_sercom, PIN_DMX_RX, PIN_DMX_TX, PAD_DMX_RX, PAD_DMX_TX);
 
 uint8_t*  _shared_dmx_data;
 uint8_t   _shared_dmx_state;
@@ -107,16 +107,16 @@ void LXSAMD21DMX::startOutput ( void ) {
 	  SerialDMX.begin(DMX_BREAK_BAUD, (uint8_t)SERIAL_8N2);
   
 	  // Assign pin mux to SERCOM functionality (must come after SerialDMX.begin)
-	  pinPeripheral(PIN_DMX_RX, PIO_SERCOM_ALT);
-	  pinPeripheral(PIN_DMX_TX, PIO_SERCOM_ALT);
-	  
+	  pinPeripheral(PIN_DMX_RX, MUX_DMX_RX);
+	  pinPeripheral(PIN_DMX_TX, MUX_DMX_TX);
+
 	  _interrupt_status = ISR_OUTPUT_ENABLED;
 	  _shared_dmx_data = dmxData();
 	  _shared_dmx_slot = 0;              
 	  _shared_dmx_state = DMX_STATE_START;
 
-	  SERCOM4->USART.INTENSET.reg =  SERCOM_USART_INTENSET_TXC | SERCOM_USART_INTENSET_ERROR;
-	  SERCOM4->USART.DATA.reg = 0;  
+	  DMX_SERCOM->USART.INTENSET.reg =  SERCOM_USART_INTENSET_TXC | SERCOM_USART_INTENSET_ERROR;
+	  DMX_SERCOM->USART.DATA.reg = 0;
 
 	}
 }
@@ -132,9 +132,9 @@ void LXSAMD21DMX::startInput ( void ) {
 		SerialDMX.begin(DMX_DATA_BAUD, (uint8_t)SERIAL_8N2);
   
 	   // Assign pin mux to SERCOM functionality (must come after SerialDMX.begin)
-	   pinPeripheral(PIN_DMX_RX, PIO_SERCOM_ALT);
-	   pinPeripheral(PIN_DMX_TX, PIO_SERCOM_ALT);
-	   
+	   pinPeripheral(PIN_DMX_RX, MUX_DMX_RX);
+	   pinPeripheral(PIN_DMX_TX, MUX_DMX_TX);
+
 		_shared_dmx_data = dmxData();
 		_shared_dmx_slot = 0;              
 		_shared_dmx_state = DMX_STATE_IDLE;
