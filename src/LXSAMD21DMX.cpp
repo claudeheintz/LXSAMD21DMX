@@ -52,7 +52,7 @@ void SERCOM4_Handler()
 
 // **************************** global data (can be accessed in ISR)  ***************
 
-Uart SerialDMX (&DMX_sercom, PIN_DMX_RX, PIN_DMX_TX, SERCOM_RX_PAD_3, UART_TX_PAD_2);
+Uart SerialDMX (&DMX_sercom, PIN_DMX_RX, PIN_DMX_TX, PAD_DMX_RX, PAD_DMX_TX);
 
 uint8_t*  _shared_dmx_data;
 uint8_t   _shared_dmx_state;
@@ -115,8 +115,8 @@ void LXSAMD21DMX::startOutput ( void ) {
 	  _shared_dmx_slot = 0;              
 	  _shared_dmx_state = DMX_STATE_START;
 
-	  SERCOM4->USART.INTENSET.reg =  SERCOM_USART_INTENSET_TXC | SERCOM_USART_INTENSET_ERROR;
-	  SERCOM4->USART.DATA.reg = 0;  
+	  DMX_SERCOM->USART.INTENSET.reg =  SERCOM_USART_INTENSET_TXC | SERCOM_USART_INTENSET_ERROR;
+	  DMX_SERCOM->USART.DATA.reg = 0;
 
 	}
 }
