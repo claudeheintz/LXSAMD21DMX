@@ -17,6 +17,7 @@
 uint8_t level = 0;
 
 void setup() {
+  SAMD21DMX.setDirectionPin(3);  // Or, wire pins 2 & 3 of MAX485 to v+ for testing
   SAMD21DMX.startOutput();
 }
 
