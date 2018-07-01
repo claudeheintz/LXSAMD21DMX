@@ -31,8 +31,10 @@ UID LXSAMD21DMX::THIS_DEVICE_ID(0x6C, 0x78, 0x00, 0x00, 0x00, 0x04);
 uint8_t  _interrupt_mode;
 
 // **************************** SERCOMn_Handler  ***************
+// 
+// DMX_SERCOM_HANDLER_FUNC macro points to handler name
 
-void SERCOM4_Handler()
+void DMX_SERCOM_HANDLER_FUNC()
 {
 	switch ( _interrupt_mode ) {
 		case ISR_OUTPUT_ENABLED:
