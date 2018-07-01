@@ -501,50 +501,54 @@ extern LXSAMD21DMX SAMD21DMX;
 	       if you use a different SERCOM
 */
 
-//********************** sercom macros ********************** 
 
-#define PIN_DMX_RX (5ul)
-#define PIN_DMX_TX (4ul)
-#define PAD_DMX_RX SERCOM_RX_PAD_3
-#define PAD_DMX_TX UART_TX_PAD_2
+// uncomment the next line to use optional macros
+//#define use_optional_sercom_macros 1
 
-// Set to PIO_SERCOM or PIO_SERCOM_ALT
-#define MUX_DMX_RX PIO_SERCOM_ALT
-#define MUX_DMX_TX PIO_SERCOM_ALT
+#if defined( use_optional_sercom_macros )
 
-// SERCOMn is pointer to memory address where SERCOM registers are located.
-#define DMX_SERCOM SERCOM4
+	//********************** optional sercom macros ********************** 
+	// --might be used for Arduino Zero sercom2 pins 3 and 4
 
-// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
-#define DMX_sercom sercom4
+	#define PIN_DMX_RX (3ul)
+	#define PIN_DMX_TX (4ul)
+	#define PAD_DMX_RX SERCOM_RX_PAD_1
+	#define PAD_DMX_TX UART_TX_PAD_0
 
-// sercom handler function
-#define DMX_SERCOM_HANDLER_FUNC SERCOM4_Handler
+	// Set to PIO_SERCOM or PIO_SERCOM_ALT
+	#define MUX_DMX_RX PIO_SERCOM_ALT
+	#define MUX_DMX_TX PIO_SERCOM_ALT
 
+	// SERCOMn is pointer to memory address where SERCOM registers are located.
+	#define DMX_SERCOM SERCOM2
 
+	// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+	#define DMX_sercom sercom2
 
-/********************** optional sercom macros ********************** 
-// --uncomment this section and comment out above
-// --might be used for Arduino Zero sercom2 pins 3 and 4
+	// sercom handler function
+	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
+	
+#else
+	//********************** sercom macros ********************** 
 
-#define PIN_DMX_RX (3ul)
-#define PIN_DMX_TX (4ul)
-#define PAD_DMX_RX SERCOM_RX_PAD_1
-#define PAD_DMX_TX UART_TX_PAD_0
+	#define PIN_DMX_RX (5ul)
+	#define PIN_DMX_TX (4ul)
+	#define PAD_DMX_RX SERCOM_RX_PAD_3
+	#define PAD_DMX_TX UART_TX_PAD_2
 
-// Set to PIO_SERCOM or PIO_SERCOM_ALT
-#define MUX_DMX_RX PIO_SERCOM_ALT
-#define MUX_DMX_TX PIO_SERCOM_ALT
+	// Set to PIO_SERCOM or PIO_SERCOM_ALT
+	#define MUX_DMX_RX PIO_SERCOM_ALT
+	#define MUX_DMX_TX PIO_SERCOM_ALT
 
-// SERCOMn is pointer to memory address where SERCOM registers are located.
-#define DMX_SERCOM SERCOM2
+	// SERCOMn is pointer to memory address where SERCOM registers are located.
+	#define DMX_SERCOM SERCOM4
 
-// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
-#define DMX_sercom sercom2
+	// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+	#define DMX_sercom sercom4
 
-// sercom handler function
-#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
+	// sercom handler function
+	#define DMX_SERCOM_HANDLER_FUNC SERCOM4_Handler
 
-*/
+#endif
 
 #endif // ifndef LXSAM21_DMX_H
