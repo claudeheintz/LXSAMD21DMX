@@ -60,6 +60,7 @@ TX (4) |----------------------| 4 DI   Gnd 5 |---+------------ Pin 1
 #include <rdm/UID.h>
 
 #define DMX_MIN_SLOTS 24
+#define RDM_MAX_FRAME 257
 #define DMX_MAX_SLOTS 512
 #define DMX_MAX_FRAME 513
 
@@ -436,12 +437,12 @@ class LXSAMD21DMX  {
   	/*!
 	 * @brief Array representing an rdm packet to be sent
 	 */
-	uint8_t  _rdmPacket[257];
+	uint8_t  _rdmPacket[RDM_MAX_FRAME];
 	
 	/*!
 	 * @brief Array representing a received rdm packet
 	 */
-	uint8_t  _rdmData[257];
+	uint8_t  _rdmData[RDM_MAX_FRAME];
   	
    /*!
     * @brief Pointer to receive callback function
@@ -502,12 +503,27 @@ extern LXSAMD21DMX SAMD21DMX;
 */
 
 
-// uncomment the next line to use optional macros
-//#define use_optional_sercom_macros 1
+/******************* alternate SERCOM and pins *******************
+ *
+ *  uncomment line 521 and define use_optional_sercom_macros
+ *  to use alternate SERCOM and pins.
+ *
+ *  This table shows the possible configurations
+ *
+ *  use_optional_sercom_macros  TX Pin  RX Pin    SERCOM
+ *  --------------------------------------------------
+ *     		undefined          |   4   |   5   |  SERCOM4
+ *     		    1              |   4   |   3   |  SERCOM2
+ *     		    2              |   10  |   11  |  SERCOM1
+ *
+ *****************************************************************/
+
+//#define use_optional_sercom_macros 2
 
 #if defined( use_optional_sercom_macros )
 
-	//********************** optional sercom macros ********************** 
+#if ( use_optional_sercom_macros == 1 )
+	//********************** optional sercom macros 1 ********************** 
 	// --might be used for Arduino Zero sercom2 pins 3 and 4
 
 	#define PIN_DMX_RX (3ul)
@@ -527,9 +543,33 @@ extern LXSAMD21DMX SAMD21DMX;
 
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
+#else
+//********************** optional sercom macros 2 ********************** 
+	// --might be used for Adafruit M0 Feather sercom1 pins 10 and 11
+
+	#define PIN_DMX_RX (11ul)
+	#define PIN_DMX_TX (10ul)
+	#define PAD_DMX_RX SERCOM_RX_PAD_0
+	#define PAD_DMX_TX UART_TX_PAD_2
+
+	// Set to PIO_SERCOM or PIO_SERCOM_ALT
+	#define MUX_DMX_RX PIO_SERCOM
+	#define MUX_DMX_TX PIO_SERCOM
+
+	// SERCOMn is pointer to memory address where SERCOM registers are located.
+	#define DMX_SERCOM SERCOM1
+
+	// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+	#define DMX_sercom sercom1
+
+	// sercom handler function
+	#define DMX_SERCOM_HANDLER_FUNC SERCOM1_Handler
+
+
+#endif
 	
 #else
-	//********************** sercom macros ********************** 
+	//********************** default sercom macros ********************** 
 
 	#define PIN_DMX_RX (5ul)
 	#define PIN_DMX_TX (4ul)
