@@ -45,6 +45,7 @@ void loop() {
     Serial.println("---");
     Serial.println(SAMD21DMX.getSlot(1));
     Serial.println(SAMD21DMX.getSlot(2));
+    got_dmx = 0;
     Serial.println(got_dmx);
     Serial.println("___");
   }
