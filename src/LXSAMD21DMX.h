@@ -518,7 +518,7 @@ extern LXSAMD21DMX SAMD21DMX;
  *
  *****************************************************************/
 
-//#define use_optional_sercom_macros 2
+#define use_optional_sercom_macros 3
 
 #if defined( use_optional_sercom_macros )
 
@@ -543,10 +543,10 @@ extern LXSAMD21DMX SAMD21DMX;
 
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
-#else
+#elif ( use_optional_sercom_macros == 2 )
 //********************** optional sercom macros 2 ********************** 
 	// --might be used for Adafruit M0 Feather sercom1 pins 10 and 11
-
+#pragma message ( "we went with macro 2, for the M0 Feather")
 	#define PIN_DMX_RX (11ul)
 	#define PIN_DMX_TX (10ul)
 	#define PAD_DMX_RX SERCOM_RX_PAD_0
@@ -565,12 +565,34 @@ extern LXSAMD21DMX SAMD21DMX;
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM1_Handler
 
+#elif ( use_optional_sercom_macros == 3 )
+	//********************** optional sercom macros 3 ********************** 
+	// --might be used for Feather M0 pins D0 and D1
+
+	#define PIN_DMX_RX (0ul)
+	#define PIN_DMX_TX (1ul)
+	#define PAD_DMX_RX SERCOM_RX_PAD_3
+	#define PAD_DMX_TX UART_TX_PAD_2
+
+	// Set to PIO_SERCOM or PIO_SERCOM_ALT
+	#define MUX_DMX_RX PIO_SERCOM_ALT
+	#define MUX_DMX_TX PIO_SERCOM_ALT
+
+	// SERCOMn is pointer to memory address where SERCOM registers are located.
+	#define DMX_SERCOM SERCOM2
+
+	// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+	#define DMX_sercom sercom2
+
+	// sercom handler function
+	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
+
 
 #endif
 	
 #else
 	//********************** default sercom macros ********************** 
-
+#pragma message ( "we went default" )
 	#define PIN_DMX_RX (5ul)
 	#define PIN_DMX_TX (4ul)
 	#define PAD_DMX_RX SERCOM_RX_PAD_3
