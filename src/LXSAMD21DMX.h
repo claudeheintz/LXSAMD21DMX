@@ -518,7 +518,7 @@ extern LXSAMD21DMX SAMD21DMX;
  *
  *****************************************************************/
 
-#define use_optional_sercom_macros 3
+// #define use_optional_sercom_macros 3
 
 #if defined( use_optional_sercom_macros )
 
@@ -544,10 +544,10 @@ extern LXSAMD21DMX SAMD21DMX;
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
 #elif ( use_optional_sercom_macros == 2 )
-//********************** optional sercom macros 2 ********************** 
+        //********************** optional sercom macros 2 ********************** 
 	// --might be used for Adafruit M0 Feather sercom1 pins 10 and 11
-#pragma message ( "we went with macro 2, for the M0 Feather")
-	#define PIN_DMX_RX (11ul)
+
+#define PIN_DMX_RX (11ul)
 	#define PIN_DMX_TX (10ul)
 	#define PAD_DMX_RX SERCOM_RX_PAD_0
 	#define PAD_DMX_TX UART_TX_PAD_2
@@ -592,8 +592,7 @@ extern LXSAMD21DMX SAMD21DMX;
 	
 #else
 	//********************** default sercom macros ********************** 
-#pragma message ( "we went default" )
-	#define PIN_DMX_RX (5ul)
+        #define PIN_DMX_RX (5ul)
 	#define PIN_DMX_TX (4ul)
 	#define PAD_DMX_RX SERCOM_RX_PAD_3
 	#define PAD_DMX_TX UART_TX_PAD_2
