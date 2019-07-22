@@ -458,54 +458,20 @@ class LXSAMD21DMX  {
 
 extern LXSAMD21DMX SAMD21DMX;
 
-/**************************
-   Change the following lines to use other than SERCOM4.
-   The following table shows the MKR1000 default uses of the SERCOMs
-   and their associated pins:
-   
-   SERCOM0	Wire		11	12
-   SERCOM1  SPI		8	9	10
-   SERCOM2	ATWINC1501B SPI
-   SERCOM3	
-   SERCOM4
-   SERCOM5	Serial1	13	14
-   
-   Changing the SERCOM also requires changing the pin MUX.
-   The following are MUX options for SERCOM3 and SERCOM4
-   Mkr1000 pins
-   
-	sercom 2
-	03 SA/1 SERCOM_RX_PAD_1
-	04 SA/0	UART_TX_PAD_0
-
-	Sercom 3
-	00 S/0
-	01 S/1
-	06 SA/2
-	07 SA/3
-	08 SA/0
-	09 SA/1
-	10 SA/3
-
-	Sercom 4
-	04 SA/2
-	05 SA/3
-
-	see datasheet pg 33 for sercom4 mux options
-	Need to be PB10 PB11, pad 2, pad 3  pad3=rx=3, pad 2=tx=1
-	which correspond to MKR10000 pins 4 & 5.
-	
-	In general, tx is either pad 0 = CRegA_TXPO 0x0 or pad 2 = CRegA_TXPO 0x1
-	see datasheet pg 481 for control register A
-
-	NOTE:  You MUST change the name of the SERCOMn_Handler() function in LXSAMD21DMX.cpp
-	       if you use a different SERCOM
-*/
-
-
-/******************* alternate SERCOM and pins *******************
+/******************* CONFIGURING THIS LIBRARY FOR OTHER PINS  **************
+ * 
+ *  Alternate SERCOM and Pins
  *
- *  uncomment line 521 and define use_optional_sercom_macros
+ *  The SAMD21 uses a combination of SERCOM (serial communication) hardware modules
+ *  and pin MUX (a register that maps internal hardware to external pins) settings 
+ *  for various communication interfaces.  There's an excellent article by Adafruit
+ *  explaining how this works:
+ * https://learn.adafruit.com/using-atsamd21-sercom-to-add-more-spi-i2c-serial-ports/muxing-it-up
+ *
+ *  This library uses a macro, use_optional_sercom_macros, to make the changes necessary
+ *  to choose which of the SAMD21's SERCOM modules and pins to use.
+ *
+ *  Uncomment line 488 and define use_optional_sercom_macros
  *  to use alternate SERCOM and pins.
  *
  *  This table shows the possible configurations
@@ -515,6 +481,7 @@ extern LXSAMD21DMX SAMD21DMX;
  *     		undefined          |   4   |   5   |  SERCOM4
  *     		    1              |   4   |   3   |  SERCOM2
  *     		    2              |   10  |   11  |  SERCOM1
+ *              3              |   1   |   0   |  SERCOM2
  *
  *****************************************************************/
 
@@ -543,7 +510,9 @@ extern LXSAMD21DMX SAMD21DMX;
 
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
-#else
+	
+#elif ( use_optional_sercom_macros == 2 )
+
 //********************** optional sercom macros 2 ********************** 
 	// --might be used for Adafruit M0 Feather sercom1 pins 10 and 11
 
@@ -565,6 +534,30 @@ extern LXSAMD21DMX SAMD21DMX;
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM1_Handler
 
+#elif ( use_optional_sercom_macros == 3 )
+
+//********************** optional sercom macros 3 ********************** 
+	// --might be used for Feather M0 pins D0 and D1
+	// --added by shiftingtech 7-21-19
+	// --mostly to enable support for https://www.sparkfun.com/products/15110
+
+	#define PIN_DMX_RX (0ul)
+	#define PIN_DMX_TX (1ul)
+	#define PAD_DMX_RX SERCOM_RX_PAD_3
+	#define PAD_DMX_TX UART_TX_PAD_2
+
+	// Set to PIO_SERCOM or PIO_SERCOM_ALT
+	#define MUX_DMX_RX PIO_SERCOM_ALT
+	#define MUX_DMX_TX PIO_SERCOM_ALT
+
+	// SERCOMn is pointer to memory address where SERCOM registers are located.
+	#define DMX_SERCOM SERCOM2
+
+	// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+	#define DMX_sercom sercom2
+
+	// sercom handler function
+	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
 
 #endif
 	
