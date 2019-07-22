@@ -471,9 +471,6 @@ extern LXSAMD21DMX SAMD21DMX;
  *  This library uses a macro, use_optional_sercom_macros, to make the changes necessary
  *  to choose which of the SAMD21's SERCOM modules and pins to use.
  *
- *  Uncomment line 488 and define use_optional_sercom_macros
- *  to use alternate SERCOM and pins.
- *
  *  This table shows the possible configurations
  *
  *  use_optional_sercom_macros  TX Pin  RX Pin    SERCOM
@@ -483,7 +480,19 @@ extern LXSAMD21DMX SAMD21DMX;
  *     		    2              |   10  |   11  |  SERCOM1
  *              3              |   1   |   0   |  SERCOM2
  *
+ *  Uncomment line 492 and define use_optional_sercom_macros
+ *  to use alternate SERCOM and pins.
+ *
+ *  If compiling for Adafruit Feather MO, option 3 is automatically selected.
+ *  If compiling for Arduino Zero, option 1 is automatically selected
+ *
  *****************************************************************/
+ 
+ #if defined ( ADAFRUIT_FEATHER_M0 )
+ 	#define use_optional_sercom_macros 3
+ #elif defined ( ARDUINO_SAMD_ZERO )
+ 	#define use_optional_sercom_macros 1
+ #endif
 
 //#define use_optional_sercom_macros 2
 
@@ -511,6 +520,8 @@ extern LXSAMD21DMX SAMD21DMX;
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
 	
+	#warning Using use_optional_sercom_macros = 1
+	
 #elif ( use_optional_sercom_macros == 2 )
 
 //********************** optional sercom macros 2 ********************** 
@@ -533,6 +544,8 @@ extern LXSAMD21DMX SAMD21DMX;
 
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM1_Handler
+	
+	#warning Using use_optional_sercom_macros = 2
 
 #elif ( use_optional_sercom_macros == 3 )
 
@@ -558,6 +571,8 @@ extern LXSAMD21DMX SAMD21DMX;
 
 	// sercom handler function
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
+	
+	#warning Using use_optional_sercom_macros = 3
 
 #endif
 	
