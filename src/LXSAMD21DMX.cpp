@@ -324,7 +324,7 @@ void LXSAMD21DMX::breakReceived( void ) {
 void LXSAMD21DMX::byteReceived(uint8_t c) {
 
 	if ( _dmx_read_state == DMX_READ_STATE_RECEIVING ) {
-	digitalWrite(6, LOW);
+	//digitalWrite(6, LOW);//<- debug pin
 		_receivedData[_next_read_slot] = c;
 		if ( _next_read_slot == 2 ) {						//RDM length slot
 			if ( _receivedData[0] == RDM_START_CODE ) {			//RDM start code
@@ -342,7 +342,7 @@ void LXSAMD21DMX::byteReceived(uint8_t c) {
 		if ( _next_read_slot >= _packet_length ) {		//reached expected end of packet
 			packetComplete();
 		}
-		digitalWrite(6, HIGH);
+		//digitalWrite(6, HIGH);//<- debug pin
 	} else if ( _dmx_read_state == DMX_READ_STATE_START ) {
 		_dmx_read_state = DMX_READ_STATE_RECEIVING;
 	}
