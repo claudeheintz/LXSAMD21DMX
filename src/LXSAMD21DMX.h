@@ -494,7 +494,7 @@ extern LXSAMD21DMX SAMD21DMX;
  	#define use_optional_sercom_macros 1
  #endif
 
-//#define use_optional_sercom_macros 2
+//#define use_optional_sercom_macros 4
 
 #if defined( use_optional_sercom_macros )
 
@@ -573,6 +573,34 @@ extern LXSAMD21DMX SAMD21DMX;
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
 	
 	#warning Using use_optional_sercom_macros = 3
+
+#elif ( use_optional_sercom_macros == 4 )
+
+//********************** optional sercom macros 4 ********************** 
+	// --replaces Serial1 on MKR1000
+	// --requires commenting out lines 178 to 186 in
+	//   Arduino15/packages/arduino/hardware/samd/1.8.4/variants/mkr1000/variant.cpp
+	//   otherwise Serial1 will conflict on Sercom5 and this won't compile
+
+	#define PIN_DMX_RX (13ul)
+	#define PIN_DMX_TX (14ul)
+	#define PAD_DMX_RX SERCOM_RX_PAD_3
+	#define PAD_DMX_TX UART_TX_PAD_2
+
+	// Set to PIO_SERCOM or PIO_SERCOM_ALT
+	#define MUX_DMX_RX PIO_SERCOM_ALT
+	#define MUX_DMX_TX PIO_SERCOM_ALT
+
+	// SERCOMn is pointer to memory address where SERCOM registers are located.
+	#define DMX_SERCOM SERCOM5
+
+	// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+	#define DMX_sercom sercom5
+
+	// sercom handler function
+	#define DMX_SERCOM_HANDLER_FUNC SERCOM5_Handler
+	
+	#warning Using use_optional_sercom_macros = 4
 
 #endif
 	
