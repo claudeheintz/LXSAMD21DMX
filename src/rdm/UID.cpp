@@ -110,7 +110,7 @@ size_t UID::printTo(Print& p) const {
 }
 
 String UID::toString() const {
-    char szRet[13];
+    char szRet[20];
     sprintf(szRet,"%u%u:%u%u%u%u", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]);
     return String(szRet);
 }
