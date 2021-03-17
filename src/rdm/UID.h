@@ -21,8 +21,11 @@
 #define RDMUID_h
 
 #include <stdint.h>
-#include <WString.h>
-#include <Printable.h>
+#include <String.h>
+#include <Print.h>
+// for Arduino SAMD 32bit Cortex M0 boards package prior to 1.8.10 use
+//#include <WString.h>
+//#include <Printable.h>
 
 
 // utility functions
