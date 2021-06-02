@@ -479,8 +479,9 @@ extern LXSAMD21DMX SAMD21DMX;
  *     		    1              |   4   |   3   |  SERCOM2
  *     		    2              |   10  |   11  |  SERCOM1
  *              3              |   1   |   0   |  SERCOM2
+ *              4              |   13  |   14  |  SERCOM5
  *
- *  Uncomment line 497 and define use_optional_sercom_macros
+ *  Uncomment line 498 and define use_optional_sercom_macros
  *  to use alternate SERCOM and pins.
  *
  *  If compiling for Adafruit Feather MO, option 3 is automatically selected.
