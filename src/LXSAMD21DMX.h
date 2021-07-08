@@ -493,9 +493,11 @@ extern LXSAMD21DMX SAMD21DMX;
  	#define use_optional_sercom_macros 3
  #elif defined ( ARDUINO_SAMD_ZERO )
  	#define use_optional_sercom_macros 1
+ #elif defined ( ARDUINO_SAMD_MKRWIFI1010 ) 
+  	#define use_optional_sercom_macros 1
  #endif
 
-//#define use_optional_sercom_macros 4
+//#define use_optional_sercom_macros 1
 
 #if defined( use_optional_sercom_macros )
 
