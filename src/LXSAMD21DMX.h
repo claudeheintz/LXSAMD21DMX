@@ -312,6 +312,15 @@ class LXSAMD21DMX  {
 	*/
 	void setupRDMControllerPacket(uint8_t* pdata, uint8_t msglen, uint8_t port, uint16_t subdevice);
 	
+	
+   /*!
+    * @brief convenience method for setting fields in the top 20 bytes of an RDM message
+    *        that will be sent.
+    *        Destination UID needs to be set outside this method.
+    *        Source UID is set to static member THIS_DEVICE_ID
+	*/
+	void  setupRDMDevicePacket(uint8_t* pdata, uint8_t msglen, uint8_t rtype, uint8_t msgs, uint16_t subdevice);
+	
 	/*!
     * @brief convenience method for setting fields in the top bytes 20-23 of an RDM message
     *        that will be sent.
@@ -363,6 +372,26 @@ class LXSAMD21DMX  {
     * @return 1 if ack is received.
     */
     uint8_t sendRDMSetCommand(UID target, uint16_t pid, uint8_t* info, uint8_t len);
+    
+    /*!
+    * @brief send RDM_GET_COMMAND_RESPONSE with RDM_RESPONSE_TYPE_ACK
+	* @discussion sends data (info) of length (len)
+    */
+    void sendRDMGetResponse(UID target, uint16_t pid, uint8_t* info, uint8_t len);
+    
+    /*!
+    * @brief send RDM_SET_COMMAND_RESPONSE/RDM_DISC_COMMAND_RESPONSE with RDM_RESPONSE_TYPE_ACK
+	* @discussion PDL is zero
+    */
+    void sendAckRDMResponse(uint8_t cmdclass, UID target, uint16_t pid);
+    
+    
+    void sendMuteAckRDMResponse(uint8_t cmdclass, UID target, uint16_t pid);
+    
+    /*!
+    * @brief send response to RDM_DISC_UNIQUE_BRANCH packet
+    */
+    void sendRDMDiscoverBranchResponse( void );
     
     static UID THIS_DEVICE_ID;
 

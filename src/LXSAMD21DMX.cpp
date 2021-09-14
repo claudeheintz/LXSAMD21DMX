@@ -573,6 +573,22 @@ uint8_t LXSAMD21DMX::sendRDMDiscoveryMute(UID target, uint8_t cmd) {
 	return rv;
 }
 
+void  LXSAMD21DMX::setupRDMDevicePacket(uint8_t* pdata, uint8_t msglen, uint8_t rtype, uint8_t msgs, uint16_t subdevice) {
+	pdata[RDM_IDX_START_CODE]		= RDM_START_CODE;
+  	pdata[RDM_IDX_SUB_START_CODE]	= RDM_SUB_START_CODE;
+  	pdata[RDM_IDX_PACKET_SIZE]		= msglen;
+  	
+  	// must set target UID outside this method
+  	UID::copyFromUID(THIS_DEVICE_ID, pdata, RDM_IDX_SOURCE_UID);
+  	
+  	pdata[RDM_IDX_TRANSACTION_NUM]	= _transaction;		//set this on read
+  	pdata[RDM_IDX_RESPONSE_TYPE]	= rtype;
+  	pdata[RDM_IDX_MSG_COUNT]		= msgs;
+  	pdata[RDM_IDX_SUB_DEV_MSB] 		= subdevice >> 8;
+  	pdata[RDM_IDX_SUB_DEV_LSB] 		= subdevice & 0xFF;
+  	// total always 20 bytes
+}
+
 uint8_t LXSAMD21DMX::sendRDMControllerPacket( void ) {
 	uint8_t rv = 0;
 	_rdm_read_handled = 1;
@@ -653,3 +669,94 @@ uint8_t LXSAMD21DMX::sendRDMSetCommand(UID target, uint16_t pid, uint8_t* info, 
 	
 	return rv;
 }
+
+void LXSAMD21DMX::sendRDMGetResponse(UID target, uint16_t pid, uint8_t* info, uint8_t len) {
+	uint8_t plen = RDM_PKT_BASE_MSG_LEN+len;
+	
+	//Build RDM packet
+	setupRDMDevicePacket(_rdmPacket, plen, RDM_RESPONSE_TYPE_ACK, 0, RDM_ROOT_DEVICE);
+	UID::copyFromUID(target, _rdmPacket, 3);
+	setupRDMMessageDataBlock(_rdmPacket, RDM_GET_COMMAND_RESPONSE, pid, len);
+	for(int j=0; j<len; j++) {
+		_rdmPacket[24+j] = info[j];
+	}
+	
+	sendRawRDMPacket(plen+2);	//add 2 bytes for checksum
+}
+
+void LXSAMD21DMX::sendAckRDMResponse(uint8_t cmdclass, UID target, uint16_t pid) {
+	uint8_t plen = RDM_PKT_BASE_MSG_LEN;
+	
+	//Build RDM packet
+	setupRDMDevicePacket(_rdmPacket, plen, RDM_RESPONSE_TYPE_ACK, 0, RDM_ROOT_DEVICE);
+	UID::copyFromUID(target, _rdmPacket, 3);
+	setupRDMMessageDataBlock(_rdmPacket, cmdclass, pid, 0x00);
+	
+	sendRawRDMPacket(plen+2);	//add 2 bytes for checksum
+}
+
+void LXSAMD21DMX::sendMuteAckRDMResponse(uint8_t cmdclass, UID target, uint16_t pid) {
+	uint8_t plen = RDM_PKT_BASE_MSG_LEN + 2;
+	
+	//Build RDM packet
+	setupRDMDevicePacket(_rdmPacket, plen, RDM_RESPONSE_TYPE_ACK, 0, RDM_ROOT_DEVICE);
+	UID::copyFromUID(target, _rdmPacket, 3);
+	setupRDMMessageDataBlock(_rdmPacket, cmdclass, pid, 0x02);
+	
+	sendRawRDMPacket(plen+2);	//add 2 bytes for checksum
+}
+
+
+void LXSAMD21DMX::sendRDMDiscoverBranchResponse( void ) {
+	// should be listening when this is called
+	
+	_rdmPacket[0] = 0;
+	_rdmPacket[1] = 0xFE;
+	_rdmPacket[2] = 0xFE;
+	_rdmPacket[3] = 0xFE;
+	_rdmPacket[4] = 0xFE;
+	_rdmPacket[5] = 0xFE;
+	_rdmPacket[6] = 0xFE;
+	_rdmPacket[7] = 0xFE;
+	_rdmPacket[8] = 0xAA;
+	
+	_rdmPacket[9] = THIS_DEVICE_ID.rawbytes()[0] | 0xAA;
+	_rdmPacket[10] = THIS_DEVICE_ID.rawbytes()[0] | 0x55;
+	_rdmPacket[11] = THIS_DEVICE_ID.rawbytes()[1] | 0xAA;
+	_rdmPacket[12] = THIS_DEVICE_ID.rawbytes()[1] | 0x55;
+	
+	_rdmPacket[13] = THIS_DEVICE_ID.rawbytes()[2] | 0xAA;
+	_rdmPacket[14] = THIS_DEVICE_ID.rawbytes()[2] | 0x55;
+	_rdmPacket[15] = THIS_DEVICE_ID.rawbytes()[3] | 0xAA;
+	_rdmPacket[16] = THIS_DEVICE_ID.rawbytes()[3] | 0x55;
+	_rdmPacket[17] = THIS_DEVICE_ID.rawbytes()[4] | 0xAA;
+	_rdmPacket[18] = THIS_DEVICE_ID.rawbytes()[4] | 0x55;
+	_rdmPacket[19] = THIS_DEVICE_ID.rawbytes()[5] | 0xAA;
+	_rdmPacket[20] = THIS_DEVICE_ID.rawbytes()[5] | 0x55;
+	
+	uint16_t checksum = rdmChecksum(&_rdmPacket[9], 12);
+	uint8_t bite = checksum >> 8;
+	_rdmPacket[21] = bite | 0xAA;
+	_rdmPacket[22] = bite | 0x55;
+	bite = checksum & 0xFF;
+	_rdmPacket[23] = bite | 0xAA;
+	_rdmPacket[24] = bite | 0x55;
+	
+	// send (no break)
+	_rdm_len = 25;
+	digitalWrite(_direction_pin, HIGH); 	// could cut off receiving (?)
+	delayMicroseconds(100);
+	_next_send_slot = 1;//SKIP start code
+	setBaudRate(DMX_DATA_BAUD);
+	_dmx_send_state = DMX_STATE_DATA;
+	
+	_rdm_task_mode = DMX_TASK_SEND_RDM;
+	 //set the interrupt
+    DMX_SERCOM->USART.INTENSET.reg = SERCOM_USART_INTENSET_DRE;
+
+	
+	while ( _rdm_task_mode ) {	//wait for packet to be sent and listening to start again
+		delay(1);				//_rdm_task_mode is set to 0 (receive) after RDM packet is completely sent
+	}
+}
+
