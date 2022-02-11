@@ -520,6 +520,8 @@ extern LXSAMD21DMX SAMD21DMX;
  
  #if defined ( ADAFRUIT_FEATHER_M0 )
  	#define use_optional_sercom_macros 3
+ #elif defined(SEEED_XIAO_M0)
+	#define use_optional_sercom_macros 5
  #elif defined ( ARDUINO_SAMD_ZERO )
  	#define use_optional_sercom_macros 1
  #elif defined ( ARDUINO_SAMD_MKRWIFI1010 ) 
@@ -633,6 +635,30 @@ extern LXSAMD21DMX SAMD21DMX;
 	#define DMX_SERCOM_HANDLER_FUNC SERCOM5_Handler
 	
 	#warning Using use_optional_sercom_macros = 4
+
+#elif (use_optional_sercom_macros == 5)
+//********************** optional sercom macros 1 **********************
+// --might be used for Arduino Zero sercom2 pins 3 and 4
+
+#define PIN_DMX_RX (3ul)
+#define PIN_DMX_TX (4ul)
+#define PAD_DMX_RX SERCOM_RX_PAD_3
+#define PAD_DMX_TX UART_TX_PAD_0
+
+// Set to PIO_SERCOM or PIO_SERCOM_ALT
+#define MUX_DMX_RX PIO_SERCOM_ALT
+#define MUX_DMX_TX PIO_SERCOM_ALT
+
+// SERCOMn is pointer to memory address where SERCOM registers are located.
+#define DMX_SERCOM SERCOM2
+
+// sercomN is C++ wrapper for SERCOMn (passed to UART constructor)
+#define DMX_sercom sercom2
+
+// sercom handler function
+#define DMX_SERCOM_HANDLER_FUNC SERCOM2_Handler
+
+#warning Using use_optional_sercom_macros = 5
 
 #endif
 	
