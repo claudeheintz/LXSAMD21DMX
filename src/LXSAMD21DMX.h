@@ -637,7 +637,7 @@ extern LXSAMD21DMX SAMD21DMX;
 	#warning Using use_optional_sercom_macros = 4
 
 #elif (use_optional_sercom_macros == 5)
-//********************** optional sercom macros 1 **********************
+//********************** optional sercom macros 5 **********************
 // --might be used for SEEED XIAO M0  sercom2 pins 3 and 4
 
 #define PIN_DMX_RX (3ul)
