@@ -638,7 +638,7 @@ extern LXSAMD21DMX SAMD21DMX;
 
 #elif (use_optional_sercom_macros == 5)
 //********************** optional sercom macros 1 **********************
-// --might be used for Arduino Zero sercom2 pins 3 and 4
+// --might be used for SEEED XIAO M0  sercom2 pins 3 and 4
 
 #define PIN_DMX_RX (3ul)
 #define PIN_DMX_TX (4ul)
@@ -663,8 +663,8 @@ extern LXSAMD21DMX SAMD21DMX;
 #endif
 	
 #else
-//********************** optional sercom macros 5 ********************** 
-// --might be used for SEEED XIAO M0  sercom2 pins 3 and 4
+//********************** default sercom macros **********************
+
 	#define PIN_DMX_RX (5ul)
 	#define PIN_DMX_TX (4ul)
 	#define PAD_DMX_RX SERCOM_RX_PAD_3
