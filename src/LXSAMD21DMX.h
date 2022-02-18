@@ -519,7 +519,7 @@ extern LXSAMD21DMX SAMD21DMX;
  *****************************************************************/
  
  #if defined ( ADAFRUIT_FEATHER_M0 )
- 	#define use_optional_sercom_macros 3
+ 	#define use_optional_sercom_macros 2
  #elif defined(SEEED_XIAO_M0)
 	#define use_optional_sercom_macros 5
  #elif defined ( ARDUINO_SAMD_ZERO )
