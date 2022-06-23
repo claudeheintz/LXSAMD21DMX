@@ -23,9 +23,14 @@
 #include <stdint.h>
 #include <String.h>
 #include <Print.h>
+
+//for Arduino M0 1.8.13 Printable.h and WString.h are deprecated, use Arduino.h
+#include <Arduino.h>
+
 // for Arduino SAMD 32bit Cortex M0 boards package prior to 1.8.10 use
 //#include <WString.h>
 //#include <Printable.h>
+
 
 
 // utility functions
