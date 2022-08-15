@@ -509,6 +509,7 @@ extern LXSAMD21DMX SAMD21DMX;
  *     		    2              |   10  |   11  |  SERCOM1
  *              3              |   1   |   0   |  SERCOM2
  *              4              |   13  |   14  |  SERCOM5
+ *              5              |   4   |   3   |  SERCOM2
  *
  *  Uncomment line 500 and define use_optional_sercom_macros
  *  to use alternate SERCOM and pins.
@@ -660,9 +661,14 @@ extern LXSAMD21DMX SAMD21DMX;
 
 #warning Using use_optional_sercom_macros = 5
 
+
+
 #endif
+//---- end of #elif (use_optional_sercom_macros == )...
 	
 #else
+//---- else == use_optional_sercom_macros is not defined )
+
 //********************** default sercom macros **********************
 
 	#define PIN_DMX_RX (5ul)
