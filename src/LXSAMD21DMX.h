@@ -615,6 +615,8 @@ extern LXSAMD21DMX SAMD21DMX;
 	// --replaces Serial1 on MKR1000
 	// --requires commenting out lines 178 to 186 in
 	//   Arduino15/packages/arduino/hardware/samd/1.8.4/variants/mkr1000/variant.cpp
+	//   -or-
+	//   ~/.platformio/packages/framework-arduino-samd/variants/mkr1000/variant.cpp
 	//   otherwise Serial1 will conflict on Sercom5 and this won't compile
 
 	#define PIN_DMX_RX (13ul)
