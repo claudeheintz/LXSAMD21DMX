@@ -15,6 +15,11 @@
 */
 /**************************************************************************/
 
+// The general default for the LXSAMD21DMX is to use SERCOM 4 with pins 5 and 4 for DMX RX/TX
+// Some SERCOM & Pin setups are defined for specific boards.
+// Read the LXSAMD21DMX.h file for other options and uncomment/edit the following line to select them:
+//#define use_optional_sercom_macros 4
+
 #include <LXSAMD21DMX.h>
 #include <rdm/rdm_utility.h>
 #include <rdm/UID.h>
