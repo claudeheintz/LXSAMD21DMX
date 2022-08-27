@@ -82,8 +82,7 @@ void loop() {
     input_value = SAMD21DMX.getSlot(start_address);
     //gamma correct
     input_value = (input_value * input_value ) / 255;
-    //ESP8266 PWM is 10bit 0-1024
-    analogWrite(LED_PIN,2*input_value);
+    analogWrite(LED_PIN,input_value);
     got_dmx = 0;  //reset
     
   } else if ( got_rdm ) {
